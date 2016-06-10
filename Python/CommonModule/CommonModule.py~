@@ -1,0 +1,28 @@
+#!/usr/bin/python -tt
+
+import sys
+import os
+import os.path
+import numpy as np
+
+def ReadSubjectList(filename):
+  try:
+    f = open(filename, 'rU')
+    if f:
+      subj_strs = f.read()
+      f.close()
+      subjectList = subj_strs.split()
+      return subjectList
+  except Exception, e:
+    print str(e)
+
+def WriteSubjectList2File(subjecList,filename):
+  try:
+    f = open(filename, 'w')
+    if f:
+      for isubj in subjecList:
+        istr = isubj + '\n'
+        f.write(istr)
+      f.close() 
+  except Exception, e:
+    print str(e)

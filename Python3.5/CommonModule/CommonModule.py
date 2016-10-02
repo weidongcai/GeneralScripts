@@ -14,8 +14,8 @@ def ReadListFile(filename):
       f.close()
       outputList = istrs.split()
       return outputList
-  except Exception, e:
-    print str(e)
+  except ValueError:
+    print("cannot open file")
 
 def ReadCSVFile(filename,header):
   output_list = []
@@ -23,13 +23,13 @@ def ReadCSVFile(filename,header):
     f = open(filename, 'rt')
     reader = csv.reader(f)
     if header:
-      header = reader.next()
+      next(reader)
     for row in reader:
       output_list.append(row)
     f.close()
     return output_list
-  except Exception, e:
-    print str(e)
+  except ValueError:
+    print("cannot open file")
 
 def WriteList2File(inputList,filename):
   try:
@@ -39,8 +39,8 @@ def WriteList2File(inputList,filename):
         istr = iinput + '\n'
         f.write(istr)
       f.close() 
-  except Exception, e:
-    print str(e)
+  except ValueError:
+    print("cannot open file")
 
 def WriteListOfList2File(List,filename):
   try:
@@ -51,8 +51,8 @@ def WriteListOfList2File(List,filename):
         f.write(new_ilist)
         f.write(str('\n'))
       f.close() 
-  except Exception, e:
-    print str(e)
+  except ValueError:
+    print("cannot open file")
 
 def MovScreen(List):
   tran_thr = 3

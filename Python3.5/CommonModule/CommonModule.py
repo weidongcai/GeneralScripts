@@ -1,4 +1,4 @@
-#!/usr/bin/python -tt
+#!/home/wdcai/anaconda3/bin/python3.5 -tt
 
 import sys
 import os

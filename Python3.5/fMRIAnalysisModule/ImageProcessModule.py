@@ -8,6 +8,8 @@ import numpy as np
 import scipy as sp
 import scipy.ndimage
 import csv
+import nilearn
+import nilearn.image
 
 def Smoothing(inputfilename, fwhm, outputfilename):
 ### smoothing script from JK ###
@@ -25,3 +27,10 @@ def Smoothing(inputfilename, fwhm, outputfilename):
   data = sp.ndimage.filters.gaussian_filter(data, sigma=kernel_sigma, mode='constant', cval=0.)
   print('Done: smoothing')
   nib.save(img, outputfilename)
+
+def SmoothingNilearn(inputfilename, fwhm, outputfilename)
+### use smoothing function from nilearn ###
+  img = nib.load(inputfilename)
+  print('Done: load ' + inputfilename)
+  img_smooth = nilearn.image.smooth_img(img, fwhm)
+  img_smooth.to_filename(outputfilename)

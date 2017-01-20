@@ -14,21 +14,35 @@ from nilearn import plotting
 import matplotlib.pyplot as plt
 
 class StatsCoV(object):
-  """define a class for coefficient of variation statisticas
   """
-  def __init__(self, mean_mean=0, std_mean=0, mean_std=0, std_std=0, mean_CoV=0, std_CoV=0):
-    """ initialize class variables 'mean' and 'std'
+  define a class for coefficient of variation statisticas
+  spatial mean of temporal mean of 4D data
+  spatial std of temporal mean of 4D data
+  spatial mean of temporal std of 4D data
+  spatial std of temporal std of 4D data
+  spatial mean of temporal CoV of 4D data
+  spatial std of temporal CoV of 4D data
+  spatial max of temporal Cov of 4D data
+  spatial min of temporal Cov of 4D data
+  """
+  def __init__(self, smean_tmean=0, sstd_tmean=0, smean_tstd=0, sstd_tstd=0, smean_tCoV=0, sstd_tCoV=0, smax_tCoV=0, smin_tCoV=0):
+    """ 
+    initialize class variables 'mean' and 'std'
+        
     """
-    self.mean_mean = mean_mean
-    self.std_mean = std_mean
-    self.mean_std = mean_std
-    self.std_std = std_std
-    self.mean_CoV = mean_CoV
-    self.std_CoV = std_CoV  
+    self.smean_tmean = smean_tmean
+    self.sstd_tmean = sstd_tmean
+    self.smean_tstd = smean_tstd
+    self.sstd_tstd = sstd_tstd
+    self.smean_tCoV = smean_tCoV
+    self.sstd_tCoV = sstd_tCoV
+    self.smax_tCoV = smax_tCoV
+    self.smin_tCoV = smin_tCoV
 
 
 def CoefficientOfVariation4D(inputFilename, maskFilename):
-  """ compute voxelwise coefficient of variation on 4D fMRI data
+  """ 
+  compute voxelwise coefficient of variation on 4D fMRI data
   """
 
   img = nib.load(inputFilename)
@@ -48,6 +62,6 @@ def CoefficientOfVariation4D(inputFilename, maskFilename):
   #img_nanstd.to_filename('test_nanstd.nii.gz')
   ###
 
-  stats = StatsCoV(np.nanmean(img_data_nanmean[img_mask_idx]), np.nanstd(img_data_nanmean[img_mask_idx]), np.nanmean(img_data_nanstd[img_mask_idx]), np.nanstd(img_data_nanstd[img_mask_idx]), np.nanmean(img_data_cv[img_mask_idx]), np.nanstd(img_data_cv[img_mask_idx]))
+  stats = StatsCoV(np.nanmean(img_data_nanmean[img_mask_idx]), np.nanstd(img_data_nanmean[img_mask_idx]), np.nanmean(img_data_nanstd[img_mask_idx]), np.nanstd(img_data_nanstd[img_mask_idx]), np.nanmean(img_data_cv[img_mask_idx]), np.nanstd(img_data_cv[img_mask_idx]), np.amax(img_data_cv[img_mask_idx]), np.amin(img_data_cv[img_mask_idx]))
   return(stats)
   

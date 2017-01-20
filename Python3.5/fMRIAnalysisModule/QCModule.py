@@ -16,16 +16,21 @@ import matplotlib.pyplot as plt
 class StatsCoV(object):
   """define a class for coefficient of variation statisticas
   """
-  def __init__(self, mean=0, std=0):
+  def __init__(self, mean_mean=0, std_mean=0, mean_std=0, std_std=0, mean_CoV=0, std_CoV=0):
     """ initialize class variables 'mean' and 'std'
     """
-    self.mean = mean
-    self.std = std  
+    self.mean_mean = mean_mean
+    self.std_mean = std_mean
+    self.mean_std = mean_std
+    self.std_std = std_std
+    self.mean_CoV = mean_CoV
+    self.std_CoV = std_CoV  
 
 
 def CoefficientOfVariation4D(inputFilename, maskFilename):
   """ compute voxelwise coefficient of variation on 4D fMRI data
   """
+
   img = nib.load(inputFilename)
   img_data = img.get_data()
   img_mask = nib.load(maskFilename)
@@ -44,6 +49,6 @@ def CoefficientOfVariation4D(inputFilename, maskFilename):
   #img_nanstd.to_filename('test_nanstd.nii.gz')
   ###
 
-  stats = StatsCoV(np.nanmean(img_data_cv), np.nanstd(img_data_cv))
+  stats = StatsCoV(np.nanmean(img_data_nanmean[img_mask_idx]), np.nanstd(img_data_nanmean[img_mask_idx]), np.nanmean(img_data_nanstd[img_mask_idx]), np.nanstd(img_data_nanstd[img_mask_idx]), np.nanmean(img_data_cv[img_mask_idx]), np.nanstd(img_data_cv[img_mask_idx]))
   return(stats)
   

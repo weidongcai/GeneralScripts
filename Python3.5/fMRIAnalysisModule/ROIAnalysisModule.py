@@ -10,8 +10,6 @@ import scipy as sp
 import scipy.io as spio
 
 import nibabel as nib
-import nilearn
-from nilearn.masking import apply_mask
 
 import matplotlib.pyplot as plt 
 
@@ -36,6 +34,8 @@ def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, 
     else:
       print('error: cannot find ' + isubj_data)
       sys.exit(1)
+    isubj_img = nib.load(isubj_data_fname)
+    isubj_img_data = isubj_img.get_data()
 
     ts_nanmean_orig = [] # create empty list for time series output
 
@@ -54,11 +54,19 @@ def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, 
       else:
         print('error: cannot find ' + jroi_data)
         sys.exit(1)
-      isubj_in_jroi = apply_mask(isubj_data_fname, jroi_data_fname)
-      isubj_in_jroi_nanmean = np.nanmean(isubj_in_jroi, axis=1) 
+      jroi_img = nib.load(jroi_data_fname)
+      jroi_img_data = jroi_img.get_data()
+      jroi_img_data_nonzero = np.nonzero(jroi_img_data)
+
+      isubj_in_jroi_nanmean = np.zeros((isubj_img_data.shape[3],1))
+      for k in range(isubj_img_data.shape[3]):
+        isubj_img_data_in_k_vol = isubj_img_data[:,:,:,k]
+        a = np.nanmean(isubj_img_data_in_k_vol[jroi_img_data_nonzero])
+        isubj_in_jroi_nanmean[k] = a
       
       ############################
       # data plotting script for testing purpose
+      # print(isubj_in_jroi_nanmean[0])
       # plt.plot(isubj_in_jroi_nanmean)
       # plt.show()
       # sys.exit(1)
@@ -67,5 +75,4 @@ def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, 
       ts_nanmean_orig.append(isubj_in_jroi_nanmean)
 
     spio.savemat(ioutputFname, mdict={'ts_nanmean_orig':ts_nanmean_orig, 'subject_id': isubj, 'roi_name':roiList})
-    #sys.exit(1)
 

@@ -46,3 +46,4 @@ for i = 1:n_grp
 end
 
 acc = sum(y_pred_all == y_test_all)/length(y_pred_all);
+fprintf('accurasy: %4.3f\n', acc);

@@ -6,6 +6,10 @@ import os.path
 import numpy as np
 import csv
 
+def ReadMovFile(filename):
+  movArray = np.loadtxt(filename)
+  return movArray
+
 def ReadListFile(filename):
   try:
     f = open(filename, 'rU')

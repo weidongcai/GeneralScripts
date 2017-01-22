@@ -50,7 +50,6 @@ def CoefficientOfVariation4D(inputFilename, maskFilename):
   img_mask = nib.load(maskFilename)
   img_mask_data = img_mask.get_data()
   img_mask_idx = np.nonzero(img_mask_data)
-  #mean_img = np.zeros(img_mask_data.shape)
   img_data_nanmean = np.nanmean(img_data, axis=3)
   img_data_nanstd = np.nanstd(img_data, axis=3)
   img_data_cv = np.divide(img_data_nanstd, img_data_nanmean)

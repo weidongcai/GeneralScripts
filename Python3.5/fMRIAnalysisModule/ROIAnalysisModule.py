@@ -13,7 +13,7 @@ import nibabel as nib
 
 import matplotlib.pyplot as plt 
 
-def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, outputPath):
+def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, outputPath, outputPostfix):
   ##################################
   # This script extracts ROI mean time series from 4D fMRI data
   # ROIs are nii files
@@ -39,7 +39,7 @@ def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, 
 
     ts_nanmean_orig = [] # create empty list for time series output
 
-    ioutputFname = outputPath + '/' + isubj + '_data.mat' # output file
+    ioutputFname = outputPath + '/' + isubj + '_' + outputPostfix + '.mat' # output file
 
     for j in range(len(roiList)):
       jroi = roiList[j]

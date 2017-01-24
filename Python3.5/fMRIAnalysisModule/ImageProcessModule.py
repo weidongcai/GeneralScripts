@@ -7,9 +7,25 @@ import os.path
 import numpy as np
 import scipy as sp
 import scipy.ndimage
+import scipy.signal as spsi
 import csv
 import nilearn
 import nilearn.image
+
+sys.path.append('/home/wdcai/Library/Python/ModulesFromColleagues')
+from filtutils import get_filt_coeffs
+
+def BPFilter(X,TR,fl,fh):
+  '''
+  X is a nxk matrix, n is number of sample, k is number of variables
+  '''
+  fs = 1/TR
+  fc = 0.5*(fh+fl)
+  order = int(np.floor(fs*2/fc))
+  b = get_filt_coeffs(np.zeros((1,X.shape[0])),fs,fl,fh,filtorder=order)
+  a = 1
+  filterX = spsi.filtfilt(b,a,X,axis=0)
+  return filterX
 
 def Smoothing(inputfilename, fwhm, outputfilename):
 ### smoothing script from JK ###
@@ -28,7 +44,7 @@ def Smoothing(inputfilename, fwhm, outputfilename):
   print('Done: smoothing')
   nib.save(img, outputfilename)
 
-def SmoothingNilearn(inputfilename, fwhm, outputfilename)
+def SmoothingNilearn(inputfilename, fwhm, outputfilename):
 ### use smoothing function from nilearn ###
   img = nib.load(inputfilename)
   print('Done: load ' + inputfilename)

@@ -19,7 +19,7 @@ def BPFilter(X,TR,fl,fh):
   '''
   X is a nxk matrix, n is number of sample, k is number of variables
   '''
-  fs = 1/TR
+  fs = 1./TR
   fc = 0.5*(fh+fl)
   order = int(np.floor(fs*2/fc))
   b = get_filt_coeffs(np.zeros((1,X.shape[0])),fs,fl,fh,filtorder=order)

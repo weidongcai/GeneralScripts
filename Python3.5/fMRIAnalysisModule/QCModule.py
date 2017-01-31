@@ -39,6 +39,21 @@ class StatsCoV(object):
     self.smax_tCoV = smax_tCoV
     self.smin_tCoV = smin_tCoV
 
+class StatsVoxInData(object):
+  """
+  define a class for couting number of voxels in Data
+  number of nonzero voxels in Data within Mask
+  number of nonzero voxels in Mask
+  ratio of nonzero vxoels in Data within Mask relative to number of nonzero voxels within Mask
+  """
+  def __init__(self, n_voxel_in_data=0, n_voxel_in_mask=0, ratio_n_voxel_in_data_to_mask=0):
+    """
+    initialize varialbes
+    """
+    self.n_voxel_in_data = n_voxel_in_data
+    self.n_voxel_in_mask = n_voxel_in_mask
+    self.ratio_n_voxel_in_data_to_mask = ratio_n_voxel_in_data_to_mask
+
 
 def CoefficientOfVariation4D(inputFilename, maskFilename):
   """ 
@@ -63,4 +78,11 @@ def CoefficientOfVariation4D(inputFilename, maskFilename):
 
   stats = StatsCoV(np.nanmean(img_data_nanmean[img_mask_idx]), np.nanstd(img_data_nanmean[img_mask_idx]), np.nanmean(img_data_nanstd[img_mask_idx]), np.nanstd(img_data_nanstd[img_mask_idx]), np.nanmean(img_data_cv[img_mask_idx]), np.nanstd(img_data_cv[img_mask_idx]), np.amax(img_data_cv[img_mask_idx]), np.amin(img_data_cv[img_mask_idx]))
   return(stats)
-  
+
+def ComputeNumOfVoxelinData(inputFilename, maskFilename):
+  cmd_nVoxelInMask = 'fslstats ' + maskFilename + ' -V'
+  cmd_nVoxelInData = 'fslstats ' + inputFilename + ' -k ' + maskFilename + ' -V'
+  nVoxelInMask = os.popen(cmd_nVoxelInMask).read().rstrip().split()[1]
+  nVoxelInData = os.popen(cmd_nVoxelInData).read().rstrip().split()[1]
+  stats = StatsVoxInData(nVoxelInData, nVoxelInMask, float(nVoxelInData)/float(nVoxelInMask))
+  return(stats)

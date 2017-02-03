@@ -13,11 +13,31 @@ import nibabel as nib
 
 import matplotlib.pyplot as plt 
 
+def MergeNiiROIsByModules(inputRoiList, inputModuleList, outputFname):
+  """
+  This module write multiple ROIs into one file and labels by their modules
+  """
+  img_template = nib.load(inputRoiList[0])
+  img_header = img_template.header
+  img_array = img_template.get_data()
+  print(img_array.shape)
+  for i in range(len(inputRoiList)):
+    iRoiFname = inputRoiList[i]
+    iRoiModule = int(inputModuleList[i])
+    print(iRoiFname)
+    print(iRoiModule)
+    iRoiImg = nib.load(iRoiFname)
+    iRoiImgArray = iRoiImg.get_data()
+    iRoiImgArrayIdx = np.where(iRoiImgArray > 0)
+    img_array[iRoiImgArrayIdx] = iRoiModule
+
+  img_template.to_filename(outputFname)
+
 def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, outputPath, outputPostfix):
-  ##################################
-  # This script extracts ROI mean time series from 4D fMRI data
-  # ROIs are nii files
-  ##################################
+  """
+  This module extracts ROI mean time series from 4D fMRI data
+  ROIs are nii files
+  """
   if not os.path.exists(outputPath):
     os.mkdir(outputPath)
   

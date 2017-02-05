@@ -1,4 +1,4 @@
-#!/home/wdcai/anaconda/bin/python3.5 -tt
+#!/home/wdcai/anaconda3/bin/python3.5 -tt
 ##################################
 # Weidong Cai, 1/17/2017
 ##################################
@@ -12,6 +12,28 @@ import scipy.io as spio
 import nibabel as nib
 
 import matplotlib.pyplot as plt 
+
+def DecomposeLabeledROIs2IndividualROIs(labeledRoiFname, individualRoiPrefix, outputFolder):
+  """
+  This module reads in a nii file with rois with different labels (1 to N) and decompose them into individual rois with different files. 
+  """
+  labeledRoi_img = nib.load(labeledRoiFname)
+  labeledRoi_img_data = labeledRoi_img.get_data()
+  labeledRoi_intensity_unique = np.unique(labeledRoi_img_data)
+  for i in range(len(labeledRoi_intensity_unique)-1):
+    iRoi_img_data = np.zeros(labeledRoi_img_data.shape)
+    iintensity = labeledRoi_intensity_unique[i+1]
+    iRoi_img_data[np.where(labeledRoi_img_data == iintensity)] = 1
+    if iintensity < 10:
+      iRoi_label = '00' + str(int(iintensity))
+    elif iintensity < 100:
+      iRoi_label = '0' + str(int(iintensity))
+    else:
+      iRoi_label = str(int(iintensity))
+    ioutput_fname = individualRoiPrefix + iRoi_label + '.nii.gz'
+    print('decomposing to ' + ioutput_fname)
+    iRoi_img = nib.Nifti1Image(iRoi_img_data, labeledRoi_img.affine, labeledRoi_img.header)
+    iRoi_img.to_filename(ioutput_fname)
 
 def MergeNiiROIsByModules(inputRoiList, inputModuleList, outputFname):
   """

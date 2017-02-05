@@ -40,9 +40,10 @@ def Smoothing(inputfilename, fwhm, outputfilename):
   #data = np.asarray(img.dataobj) #proxy object to avoid caching (this is for stricter memory management on Sherlock)
   data = img.get_data() # this is fine for our servers
   print('Done: set smooth kernel')
-  data = sp.ndimage.filters.gaussian_filter(data, sigma=kernel_sigma, mode='constant', cval=0.)
+  new_data = sp.ndimage.filters.gaussian_filter(data, sigma=kernel_sigma, mode='constant', cval=0.)
+  new_img = nib.Nifti1Image(new_data, img.affine, img.header)
   print('Done: smoothing')
-  nib.save(img, outputfilename)
+  nib.save(new_img, outputfilename)
 
 def SmoothingNilearn(inputfilename, fwhm, outputfilename):
 ### use smoothing function from nilearn ###

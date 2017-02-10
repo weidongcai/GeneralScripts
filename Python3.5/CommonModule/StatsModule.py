@@ -4,6 +4,7 @@ import sys
 import os
 import os.path
 import numpy as np
+import numpy.matlib
 import scipy as sp
 import scipy.signal as spsi
 import statsmodels
@@ -13,10 +14,10 @@ def princomp(X):
   X is a nxp matrix
   returns:
   coeff is a pxp matrix, each column containing coeffiicents for each principal component
-  score is a nxp matrix, the representation of X in the pca sace
-  latent contains the eigenvalues of the covariance matrix of A
+  score is a pxn matrix, the representation of X in the pca sace
+  latent is a 1xp vector, containing the eigenvalues of the covariance matrix of A
   """
-  X_demean = (X - np.mean(X.T, axis=1)).T
+  X_demean = (X - np.matlib.repmat(np.mean(X, axis=0), X.shape[0], 1)).T
   [latent, coeff] = np.linalg.eig(np.cov(X_demean))
   score = np.dot(coeff.T, X_demean)
   return coeff, score, latent

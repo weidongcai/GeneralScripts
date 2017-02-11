@@ -9,13 +9,20 @@ import scipy as sp
 import scipy.signal as spsi
 import statsmodels
 
-def getEig1stSVD(X):
+def get1stEigVec(X):
   """
   X is a nxp matrix
-  returns 1st eig
+  return eigvc1st : 1st eigen vector
   """
-  X_demean = (X - np.matlib.repmat(np.mean(X, axis=0), X.shape[0], 1))
-  
+  eigvcs,scores,eigws = princomp(X)
+  idx = eigws.argsort()[::-1]
+  eigvcs = eigvcs[:,idx]
+  X_mean = np.mean(X, axis=0)
+  if np.corrcoef(X_mean, eigvcs[:,0])[0,1] > 0:
+    eigvc1st = eigvcs[:,0]
+  else:
+    eigvc1st = -1*eigvcs[:,0]
+  return eigvc1st
 
 def princomp(X):
   """
@@ -28,11 +35,8 @@ def princomp(X):
   """
   X_demean = (X - np.matlib.repmat(np.mean(X, axis=0), X.shape[0], 1)).T
   X_cov = np.cov(X_deman)
-  evals,evecs = np.linalg.eig(X_cov)
-  indices = evals.argsort()[::-1]
-  latent = evals[indices]
-  coeff = evecs[:,indices]
-  score = np.dot(coeff:w.T, X_demean)
+  latent,coeff = np.linalg.eig(X_cov)
+  score = np.dot(coeff.T, X_demean)
   return coeff, score, latent
 
 def NormalizeData(X):

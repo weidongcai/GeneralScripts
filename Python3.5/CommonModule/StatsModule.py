@@ -9,17 +9,30 @@ import scipy as sp
 import scipy.signal as spsi
 import statsmodels
 
+def getEig1stSVD(X):
+  """
+  X is a nxp matrix
+  returns 1st eig
+  """
+  X_demean = (X - np.matlib.repmat(np.mean(X, axis=0), X.shape[0], 1))
+  
+
 def princomp(X):
   """
   X is a nxp matrix
+  X_cov is the covariance matrix of X
   returns:
-  coeff is a pxp matrix, each column containing coeffiicents for each principal component
+  coeff is a pxp matrix, which is,each column containing coeffiicents for each principal component
   score is a pxn matrix, the representation of X in the pca sace
   latent is a 1xp vector, containing the eigenvalues of the covariance matrix of A
   """
   X_demean = (X - np.matlib.repmat(np.mean(X, axis=0), X.shape[0], 1)).T
-  [latent, coeff] = np.linalg.eig(np.cov(X_demean))
-  score = np.dot(coeff.T, X_demean)
+  X_cov = np.cov(X_deman)
+  evals,evecs = np.linalg.eig(X_cov)
+  indices = evals.argsort()[::-1]
+  latent = evals[indices]
+  coeff = evecs[:,indices]
+  score = np.dot(coeff:w.T, X_demean)
   return coeff, score, latent
 
 def NormalizeData(X):

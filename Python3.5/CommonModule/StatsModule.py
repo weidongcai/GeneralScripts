@@ -9,7 +9,29 @@ import scipy as sp
 import scipy.signal as spsi
 import statsmodels
 
-def get1stEigVec(X):
+def get1stEig(X):
+  """
+  X is a nxp matrix
+  return eigen1
+  """
+  ts = X
+  print(ts.shape)
+  covmat = np.cov(ts.T)
+  #print(covmat)
+  evals, evecs = np.linalg.eig(covmat)
+  print(evals[0])
+  print([np.real_if_close(ie, tol=10) for ie in evals])
+  indices = evals.argsort()[::-1]
+  evals = evals[indices]
+  evecs = evecs[:, indices]
+  meants = np.mean(ts, axis=0)
+  if np.corrcoef(meants, evecs[:,0])[0,1] > 0:
+    eigen1 = evecs[:,0]
+  else:
+    eigen1 = -1*evecs[:,0]
+  return eigen1
+
+def extract1stEigVec(X):
   """
   X is a nxp matrix
   return eigvc1st : 1st eigen vector
@@ -34,7 +56,7 @@ def princomp(X):
   latent is a 1xp vector, containing the eigenvalues of the covariance matrix of A
   """
   X_demean = (X - np.matlib.repmat(np.mean(X, axis=0), X.shape[0], 1)).T
-  X_cov = np.cov(X_deman)
+  X_cov = np.cov(X_demean)
   latent,coeff = np.linalg.eig(X_cov)
   score = np.dot(coeff.T, X_demean)
   return coeff, score, latent

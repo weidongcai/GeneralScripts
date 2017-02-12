@@ -8,10 +8,11 @@ import os
 import numpy as np
 import scipy as sp
 import scipy.io as spio
-
 import nibabel as nib
-
 import matplotlib.pyplot as plt 
+
+sys.path.append('/home/wdcai/Library/Python3.5/CommonModule')
+from StatsModule import get1stEig
 
 def DecomposeLabeledROIs2IndividualROIs(labeledRoiFname, individualRoiPrefix, outputFolder):
   """
@@ -100,12 +101,17 @@ def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, 
       jroi_img_data = jroi_img.get_data()
       jroi_img_data_nonzero = np.nonzero(jroi_img_data)
 
+      isubj_in_jroi_2D = np.zeros((len(jroi_img_data_nonzero[0]), isubj_img_data.shape[3]))
       isubj_in_jroi_nanmean = np.zeros((isubj_img_data.shape[3],1))
+      isubj_in_jroi_1stEigVec = np.zeros(isubj_in_jroi_nanmean.shape)
       for k in range(isubj_img_data.shape[3]):
         isubj_img_data_in_k_vol = isubj_img_data[:,:,:,k]
-        a = np.nanmean(isubj_img_data_in_k_vol[jroi_img_data_nonzero])
-        isubj_in_jroi_nanmean[k] = a
-      
+        isubj_in_jroi_2D[:,k] = isubj_img_data_in_k_vol[jroi_img_data_nonzero]
+        isubj_in_jroi_nanmean[k] = np.nanmean(isubj_img_data_in_k_vol[jroi_img_data_nonzero])
+      #print(isubj_in_jroi_2D)
+      isubj_in_jroi_1stEigVec = get1stEig(isubj_in_jroi_2D)
+      #print(isubj_in_jroi_1stEigVec)
+      sys.exit(0) 
       ############################
       # data plotting script for testing purpose
       # print(isubj_in_jroi_nanmean[0])

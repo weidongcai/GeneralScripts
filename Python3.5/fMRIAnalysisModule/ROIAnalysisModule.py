@@ -6,13 +6,35 @@
 import sys
 import os
 import numpy as np
+import numpy.matlib
 import scipy as sp
 import scipy.io as spio
 import nibabel as nib
 import matplotlib.pyplot as plt 
 
 sys.path.append('/home/wdcai/Library/Python3.5/CommonModule')
-from StatsModule import get1stEig
+
+def get1stEigenTS(X):
+  """
+  extract 1st eigenvariate TS from X
+  X is a txn matrix, t is number of time point, n is number of voxel
+  return Y is a tx1 vector
+  """
+  m,n = X.shape
+  if m>n:
+    u_,s,v = np.linalg.svd(np.dot(X.T, X))
+    v = v.T # matlab & scipy svd difference v = v.T
+    v = v[:,0]
+    u = np.divide(np.dot(X,v), np.sqrt(s[0]))
+  else:
+    u,s.v_ = np.linalg.svd(np.dot(X, X.T))
+    u = u[:,0]
+    v = np.dot(X.T, np.divide(u, np.sqrt(s[0])))
+  d = np.sign(np.sum(v))
+  u = np.dot(u, d)
+  v = np.dot(v, d)
+  Y = np.dot(u, np.sqrt(np.divide(s[0],n)))
+  return Y
 
 def DecomposeLabeledROIs2IndividualROIs(labeledRoiFname, individualRoiPrefix, outputFolder):
   """
@@ -108,9 +130,9 @@ def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, 
         isubj_img_data_in_k_vol = isubj_img_data[:,:,:,k]
         isubj_in_jroi_2D[:,k] = isubj_img_data_in_k_vol[jroi_img_data_nonzero]
         isubj_in_jroi_nanmean[k] = np.nanmean(isubj_img_data_in_k_vol[jroi_img_data_nonzero])
-      #print(isubj_in_jroi_2D)
-      isubj_in_jroi_1stEigVec = get1stEig(isubj_in_jroi_2D)
-      #print(isubj_in_jroi_1stEigVec)
+      isubj_in_jroi_1stEigVec = get1stEigenTS(isubj_in_jroi_2D.T)
+      print(isubj_in_jroi_1stEigVec)
+      print(isubj_in_jroi_nanmean)
       sys.exit(0) 
       ############################
       # data plotting script for testing purpose

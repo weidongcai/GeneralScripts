@@ -9,43 +9,6 @@ import scipy as sp
 import scipy.signal as spsi
 import statsmodels
 
-def get1stEig(X):
-  """
-  X is a nxp matrix
-  return eigen1
-  """
-  ts = X
-  print(ts.shape)
-  covmat = np.cov(ts.T)
-  #print(covmat)
-  evals, evecs = np.linalg.eig(covmat)
-  print(evals[0])
-  print([np.real_if_close(ie, tol=10) for ie in evals])
-  indices = evals.argsort()[::-1]
-  evals = evals[indices]
-  evecs = evecs[:, indices]
-  meants = np.mean(ts, axis=0)
-  if np.corrcoef(meants, evecs[:,0])[0,1] > 0:
-    eigen1 = evecs[:,0]
-  else:
-    eigen1 = -1*evecs[:,0]
-  return eigen1
-
-def extract1stEigVec(X):
-  """
-  X is a nxp matrix
-  return eigvc1st : 1st eigen vector
-  """
-  eigvcs,scores,eigws = princomp(X)
-  idx = eigws.argsort()[::-1]
-  eigvcs = eigvcs[:,idx]
-  X_mean = np.mean(X, axis=0)
-  if np.corrcoef(X_mean, eigvcs[:,0])[0,1] > 0:
-    eigvc1st = eigvcs[:,0]
-  else:
-    eigvc1st = -1*eigvcs[:,0]
-  return eigvc1st
-
 def princomp(X):
   """
   X is a nxp matrix

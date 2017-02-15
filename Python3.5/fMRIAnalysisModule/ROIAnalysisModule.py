@@ -27,7 +27,7 @@ def get1stEigenTS(X):
     v = v[:,0]
     u = np.divide(np.dot(X,v), np.sqrt(s[0]))
   else:
-    u,s.v_ = np.linalg.svd(np.dot(X, X.T))
+    u,s,v_ = np.linalg.svd(np.dot(X, X.T))
     u = u[:,0]
     v = np.dot(X.T, np.divide(u, np.sqrt(s[0])))
   d = np.sign(np.sum(v))
@@ -103,6 +103,7 @@ def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, 
     isubj_img_data = isubj_img.get_data()
 
     ts_nanmean_orig = [] # create empty list for time series output
+    ts_eigen1_orig = []
 
     ioutputFname = outputPath + '/' + isubj + '_' + outputPostfix + '.mat' # output file
 
@@ -125,15 +126,12 @@ def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, 
 
       isubj_in_jroi_2D = np.zeros((len(jroi_img_data_nonzero[0]), isubj_img_data.shape[3]))
       isubj_in_jroi_nanmean = np.zeros((isubj_img_data.shape[3],1))
-      isubj_in_jroi_1stEigVec = np.zeros(isubj_in_jroi_nanmean.shape)
+      isubj_in_jroi_Eigen1Variate = np.zeros(isubj_in_jroi_nanmean.shape)
       for k in range(isubj_img_data.shape[3]):
         isubj_img_data_in_k_vol = isubj_img_data[:,:,:,k]
         isubj_in_jroi_2D[:,k] = isubj_img_data_in_k_vol[jroi_img_data_nonzero]
         isubj_in_jroi_nanmean[k] = np.nanmean(isubj_img_data_in_k_vol[jroi_img_data_nonzero])
-      isubj_in_jroi_1stEigVec = get1stEigenTS(isubj_in_jroi_2D.T)
-      print(isubj_in_jroi_1stEigVec)
-      print(isubj_in_jroi_nanmean)
-      sys.exit(0) 
+      isubj_in_jroi_Eigen1Variate = get1stEigenTS(isubj_in_jroi_2D.T)
       ############################
       # data plotting script for testing purpose
       # print(isubj_in_jroi_nanmean[0])
@@ -143,6 +141,7 @@ def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, 
       ############################
 
       ts_nanmean_orig.append(isubj_in_jroi_nanmean)
+      ts_eigen1_orig.append(isubj_in_jroi_Eigen1Variate)
 
-    spio.savemat(ioutputFname, mdict={'ts_nanmean_orig':ts_nanmean_orig, 'subject_id': isubj, 'roi_name':roiList})
+    spio.savemat(ioutputFname, mdict={'ts_nanmean_orig':ts_nanmean_orig, 'ts_eigen1_orig':ts_eigen1_orig,'subject_id': isubj, 'roi_name':roiList})
 

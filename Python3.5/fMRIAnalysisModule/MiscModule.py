@@ -26,12 +26,11 @@ def CorrelationIcaMaps(sourceIcFname, targetIcFname, maskFname):
   data_mask = img_msk.get_data()
   idx_mask = np.nonzero(data_mask)
 
-  tgt2src_cc = np.zeros(data_tgt.shape[3], data_src.shape[3])
-  for it in data_tgt.shape[3]:
+  tgt2src_cc = np.zeros((data_tgt.shape[3], data_src.shape[3]))
+  for it in range(data_tgt.shape[3]):
     idata_tgt = data_tgt[:,:,:,it]
-    idata_tgt_vec = idata_tgt(idx_mask)
-    for ic in data_src.shape[3]:
-      print('computing correlation: target ' + it + ' source ' + ic)
+    idata_tgt_vec = idata_tgt[idx_mask]
+    for ic in range(data_src.shape[3]):
       idata_src = data_src[:,:,:,ic]
       idata_src_vec = idata_src[idx_mask]
       tgt2src_cc[it, ic] = np.corrcoef(idata_tgt_vec, idata_src_vec)[0, 1]

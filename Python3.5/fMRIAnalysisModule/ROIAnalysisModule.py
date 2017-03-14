@@ -78,6 +78,23 @@ def MergeNiiROIsByModules(inputRoiList, inputModuleList, outputFname):
 
   img_template.to_filename(outputFname)
 
+def MergeNiiROIsNumberLabel(inputRoiList, outputFname):
+  """
+  This module merges a list or ROIs in one nii file. Each ROI is assigned with a different number as intensity
+  """
+  img_template = nib.load(inputRoiList[0])
+  img_header = img_template.header
+  img_array = img_template.get_data()
+  print(img_array.shape)
+  for i in range(len(inputRoiList)):
+    iRoiFname = inputRoiList[i]
+    iRoiIntensity = i+1
+    iRoiImg = nib.load(iRoiFname)
+    iRoiImgArray = iRoiImg.get_data()
+    iRoiImgArrayIdx = np.where(iRoiImgArray > 0)
+    img_array[iRoiImgArrayIdx] = iRoiIntensity
+  img_template.to_filename(outputFname)
+
 def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, outputPath, outputPostfix):
   """
   This module extracts ROI mean time series from 4D fMRI data

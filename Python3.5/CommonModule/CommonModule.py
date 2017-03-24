@@ -6,6 +6,13 @@ import os.path
 import numpy as np
 import csv
 
+def ElementOfListANotInListB(listA, listB):
+  listANotInListB = []
+  for i in range(len(listA)):
+    if not(listA[i] in listB):
+      listANotInListB.append(listA[i])
+  return listANotInListB
+
 def ReadMovFile(filename):
   movArray = np.loadtxt(filename)
   return movArray

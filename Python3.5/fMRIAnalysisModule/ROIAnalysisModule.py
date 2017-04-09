@@ -128,8 +128,15 @@ def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, 
       jroi = roiList[j]
       print('extracting ' + jroi)
       jroi_data = roiDataList[j]
-      jroi_data_nii = jroi_data + '.nii'
-      jroi_data_nii_gz = jroi_data_nii + '.gz'
+      if jroi_data[-4:] == '.nii':
+        jroi_data_nii = jroi_data
+        jroi_data_nii_gz = jroi_data_nii + '.gz'
+      elif jroi_data[-7:] == '.nii.gz':
+        jroi_data_nii_gz = jroi_data
+        jroi_data_nii = jroi_data[:-3]
+      else:
+        jroi_data_nii = jroi_data + '.nii'
+        jroi_data_nii_gz = jroi_data_nii + '.gz'
       if os.path.isfile(jroi_data_nii_gz):
         jroi_data_fname = jroi_data_nii_gz
       elif os.path.isfile(jroi_data_nii):

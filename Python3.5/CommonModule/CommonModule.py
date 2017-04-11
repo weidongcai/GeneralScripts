@@ -28,12 +28,24 @@ def ReadListFile(filename):
   except ValueError:
     print("cannot open file")
 
-def ReadCSVFile(filename,header):
+def ReadCSVFileHeader(filename, isHeaderExist):
   output_list = []
   try:
     f = open(filename, 'rt')
     reader = csv.reader(f)
-    if header:
+    if isHeaderExist:
+      header = next(reader)
+      output_list.append(header)
+  except ValueError:
+    print("cannot open file")
+  return output_list[0]
+
+def ReadCSVFileBody(filename, isHeaderExist):
+  output_list = []
+  try:
+    f = open(filename, 'rt')
+    reader = csv.reader(f)
+    if isHeaderExist:
       next(reader)
     for row in reader:
       output_list.append(row)
@@ -78,3 +90,26 @@ def MovScreen(List):
 def FindFilesWithExtension(path, ext):
   outputList = [f for f in os.listdir(path) if f.endswith(ext)]
   return outputList
+
+def ExtractBehavForSubj(inputSubjectListFname, inputBehavCsv, keyVar, outputFname):
+  subjectList = ReadListFile(inputSubjectListFname)
+  behavStats = ReadCSVFileBody(inputBehavCsv, 1)
+  behavStatsHeader = ReadCSVFileHeader(inputBehavCsv, 1)
+  print(keyVar)
+  print(behavStatsHeader)
+  if keyVar in behavStatsHeader:
+    keyVarIdx = behavStatsHeader.index(keyVar)
+  else:
+    print('error: cannot find variable of interest')
+    sys.exit(0)
+  subjectListFromBehav = []
+  for iBeh in behavStats:
+    subjectListFromBehav.append(iBeh[0])
+  outputList = []
+  for isubj in subjectList:
+    isubj_idx = subjectListFromBehav.index(isubj)
+    isubj_beh = behavStats[isubj_idx]
+    outputList.append(isubj_beh[keyVarIdx])
+    print(isubj)
+    print(isubj_beh[keyVarIdx])
+  WriteList2File(outputList, outputFname)  

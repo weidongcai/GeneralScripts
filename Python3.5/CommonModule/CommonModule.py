@@ -6,6 +6,13 @@ import os.path
 import numpy as np
 import csv
 
+def ElementOfListAInListB(listA, listB):
+  listAInListB = []
+  for i in range(len(listA)):
+    if (listA[i] in listB):
+      listAInListB.append(listA[i])
+  return listAInListB
+
 def ElementOfListANotInListB(listA, listB):
   listANotInListB = []
   for i in range(len(listA)):

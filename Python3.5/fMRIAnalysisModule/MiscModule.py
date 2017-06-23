@@ -36,3 +36,27 @@ def CorrelationIcaMaps(sourceIcFname, targetIcFname, maskFname):
       tgt2src_cc[it, ic] = np.corrcoef(idata_tgt_vec, idata_src_vec)[0, 1]
 
   return tgt2src_cc
+
+def ThreshNii(inputFname, outputFname, maskFname, threshType, threshValue):
+  """
+  This module thresholds input nifti file and output thresholded mask
+  """
+  img_input = nib.load(inputFname)
+  data_input = img_input.get_data()
+  img_mask = nib.load(maskFname)
+  data_mask = img_mask.get_data()
+  idx_mask = np.where(data_mask > 0)
+  data_input_in_mask = data_input[idx_mask]
+  if (threshType == 'intensity'):
+    thresh_idx = np.where(data_input_in_mask > threshValue)
+  elif (threshType == 'percent'):
+    data_input_in_mask_sort = np.sort(data_input_in_mask)[::-1]
+    data_input_in_mask_len = len(data_input_in_mask)
+    perc_len = np.floor(data_input_in_mask_len * threshValue).astype(int)
+    threshValueInIntensity = data_input_in_mask_sort[perc_len]
+    thresh_idx = np.where(data_input > threshValueInIntensity)
+  data_output = np.zeros(data_input.shape)
+  data_output[thresh_idx] = 1
+  img_output = nib.Nifti1Image(data_output, img_input.affine, img_input.header)
+  nib.save(img_output, outputFname)
+  print(outputFname + ' saved')

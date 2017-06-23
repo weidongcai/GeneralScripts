@@ -12,7 +12,7 @@ import scipy.io as spio
 import nibabel as nib
 import matplotlib.pyplot as plt 
 
-sys.path.append('/home/wdcai/Library/Python3.5/CommonModule')
+sys.path.append('/home/wdcai/Library/Python/CommonModule')
 
 def get1stEigenTS(X):
   """
@@ -54,7 +54,7 @@ def DecomposeLabeledROIs2IndividualROIs(labeledRoiFname, individualRoiPrefix, ou
     else:
       iRoi_label = str(int(iintensity))
     ioutput_fname = individualRoiPrefix + iRoi_label + '.nii.gz'
-    print('decomposing to ' + ioutput_fname)
+    print 'decomposing to ' + ioutput_fname
     iRoi_img = nib.Nifti1Image(iRoi_img_data, labeledRoi_img.affine, labeledRoi_img.header)
     iRoi_img.to_filename(ioutput_fname)
 
@@ -65,12 +65,12 @@ def MergeNiiROIsByModules(inputRoiList, inputModuleList, outputFname):
   img_template = nib.load(inputRoiList[0])
   img_header = img_template.header
   img_array = img_template.get_data()
-  print(img_array.shape)
+  print img_array.shape
   for i in range(len(inputRoiList)):
     iRoiFname = inputRoiList[i]
     iRoiModule = int(inputModuleList[i])
-    print(iRoiFname)
-    print(iRoiModule)
+    print iRoiFname
+    print iRoiModule
     iRoiImg = nib.load(iRoiFname)
     iRoiImgArray = iRoiImg.get_data()
     iRoiImgArrayIdx = np.where(iRoiImgArray > 0)
@@ -85,7 +85,7 @@ def MergeNiiROIsNumberLabel(inputRoiList, outputFname):
   img_template = nib.load(inputRoiList[0])
   img_header = img_template.header
   img_array = img_template.get_data()
-  print(img_array.shape)
+  print img_array.shape
   for i in range(len(inputRoiList)):
     iRoiFname = inputRoiList[i]
     iRoiIntensity = i+1
@@ -106,7 +106,7 @@ def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, 
   for i in range(len(subjectList)):
     isubj = subjectList[i]
     isubj_data = subjectDataList[i]
-    print(isubj)
+    print isubj
     isubj_data_nii = isubj_data + '.nii'
     isubj_data_nii_gz = isubj_data_nii + '.gz'
     if os.path.isfile(isubj_data_nii_gz):
@@ -142,7 +142,7 @@ def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, 
       elif os.path.isfile(jroi_data_nii):
         jroi_data_fname = jroi_data_nii
       else:
-        print('error: cannot find ' + jroi_data)
+        print 'error: cannot find ' + jroi_data
         sys.exit(1)
       jroi_img = nib.load(jroi_data_fname)
       jroi_img_data = jroi_img.get_data()
@@ -158,7 +158,7 @@ def ExtractNiiROITsFromfMRI(subjectList, subjectDataList, roiList, roiDataList, 
       isubj_in_jroi_Eigen1Variate = get1stEigenTS(isubj_in_jroi_2D.T)
       ############################
       # data plotting script for testing purpose
-      # print(isubj_in_jroi_nanmean[0])
+      # print isubj_in_jroi_nanmean[0]
       # plt.plot(isubj_in_jroi_nanmean)
       # plt.show()
       # sys.exit(1)
@@ -182,8 +182,8 @@ def ExtractNiiROITsFromfMRIMultiSess(subjectList, sessionList, sessDataList, roi
     isubj = subjectList[i]
     ises = sessionList[i]
     isubj_data = sessDataList[i]
-    print(isubj)
-    print(ises)
+    print isubj
+    print ises
     isubj_data_nii = isubj_data + '.nii'
     isubj_data_nii_gz = isubj_data_nii + '.gz'
     if os.path.isfile(isubj_data_nii_gz):
@@ -191,7 +191,7 @@ def ExtractNiiROITsFromfMRIMultiSess(subjectList, sessionList, sessDataList, roi
     elif os.path.isfile(isubj_data_nii):
       isubj_data_fname = isubj_data_nii
     else:
-      print('error: cannot find ' + isubj_data)
+      print 'error: cannot find ' + isubj_data
       sys.exit(1)
     isubj_img = nib.load(isubj_data_fname)
     isubj_img_data = isubj_img.get_data()
@@ -219,7 +219,7 @@ def ExtractNiiROITsFromfMRIMultiSess(subjectList, sessionList, sessDataList, roi
       elif os.path.isfile(jroi_data_nii):
         jroi_data_fname = jroi_data_nii
       else:
-        print('error: cannot find ' + jroi_data)
+        print 'error: cannot find ' + jroi_data
         sys.exit(1)
       jroi_img = nib.load(jroi_data_fname)
       jroi_img_data = jroi_img.get_data()
@@ -235,7 +235,7 @@ def ExtractNiiROITsFromfMRIMultiSess(subjectList, sessionList, sessDataList, roi
       isubj_in_jroi_Eigen1Variate = get1stEigenTS(isubj_in_jroi_2D.T)
       ############################
       # data plotting script for testing purpose
-      # print(isubj_in_jroi_nanmean[0])
+      # print isubj_in_jroi_nanmean[0]
       # plt.plot(isubj_in_jroi_nanmean)
       # plt.show()
       # sys.exit(1)
@@ -245,3 +245,19 @@ def ExtractNiiROITsFromfMRIMultiSess(subjectList, sessionList, sessDataList, roi
       ts_eigen1_orig.append(isubj_in_jroi_Eigen1Variate)
 
     spio.savemat(ioutputFname, mdict={'ts_nanmean_orig':ts_nanmean_orig, 'ts_eigen1_orig':ts_eigen1_orig,'subject_id': isubj, 'roi_name':roiList})
+
+def ExtractROIValueFromMRI(dataFname, roiFname):
+  """
+  This module extracts ROI mean from 3D MRI data
+  ROIs are nii or img files
+  """
+ 
+  roi_img = nib.load(roiFname)
+  roi_img_data = roi_img.get_data()
+  roi_img_idx = np.nonzero(roi_img_data)
+
+  data_img = nib.load(dataFname)
+  data_img_data = data_img.get_data()
+  data_img_roi_mean = np.nanmean(data_img_data[roi_img_idx])
+  
+  return data_img_roi_mean 

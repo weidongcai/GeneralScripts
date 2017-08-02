@@ -1,4 +1,4 @@
-#!/home/wdcai/anaconda3/bin/python3.5 -tt
+#!/home/wdcai/anaconda2/bin/python -tt
 ##################################
 # Weidong Cai, 1/17/2017
 ##################################
@@ -261,3 +261,26 @@ def ExtractROIValueFromMRI(dataFname, roiFname):
   data_img_roi_mean = np.nanmean(data_img_data[roi_img_idx])
   
   return data_img_roi_mean 
+
+def ExtractNumberLabeledROIValueFromMRI(dataFname, roiFname):
+  """
+  This module extracts number labeled ROI means from 3D MRI data
+  Each ROI file containing multiple integer values for different regions
+  """
+ 
+  roi_img = nib.load(roiFname)
+  roi_img_data = roi_img.get_data()
+  roi_labels = np.unique(roi_img_data)
+  roi_labels_nonzero = np.trim_zeros(roi_labels)
+  
+  data_img = nib.load(dataFname)
+  data_img_data = data_img.get_data()
+  
+  data_img_rois_mean = np.zeros((len(roi_labels_nonzero), 1))
+
+  for i in range(len(roi_labels_nonzero)):
+    iroi_label = roi_labels_nonzero[i]
+    iroi_img_idx = np.where(roi_img_data==iroi_label)
+    data_img_rois_mean[i] = np.nanmean(data_img_data[iroi_img_idx])
+  
+  return data_img_rois_mean 

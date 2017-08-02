@@ -21,6 +21,7 @@ y_test_all = [];
 fullidx = 1:n_grp;
 
 for i = 1:n_grp
+    i
     idx_test = i;
     idx_train = find(fullidx ~= i);
     X_test = [X_grp1_norm(idx_test,:); X_grp2_norm(idx_test,:)];

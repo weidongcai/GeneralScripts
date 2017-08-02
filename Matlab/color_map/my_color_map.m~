@@ -1,0 +1,23 @@
+function [newColorMap] = my_color_map(posColor, negColor)
+
+posScale = [zeros(1, 124), linspace(0.2, 0.8, 132)];
+negScale = [linspace(0.8, 0.2, 132), zeros(1, 124)];
+transScale = [zeros(1, 85), linspace(0.2, 0.8, 43), linspace(0.8,0.2,43), zeros(1,85)];
+zeroScale = [zeros(1, 256)];
+neutralScale = [0.5*ones(1,256)];
+
+posScale = [zeros(1, 126), ones(1,4), linspace(0.2, 0.8, 126)];
+negScale = [linspace(0.8, 0.2, 126), ones(1,4), zeros(1, 126)];
+oneScale = [ones(1, 256)];
+transScale = [zeros(1,62), linspace(0.4,0.8,64), ones(1,4), linspace(0.8,0.4,64) zeros(1,126)];
+newColorMap = [posScale; negScale; transScale]';
+
+if strcmp(posColor, 'red') && strcmp(negColor, 'blue')
+    newColorMap = [posScale; zeroScale; negScale]';
+elseif strcmp(posColor, 'red') && strcmp(negColor, 'green')
+    newColorMap = [posScale; negScale; zeroScale]';
+elseif strcmp(posColor, 'green') && strcmp(negColor, 'bllue')
+    newColorMap = [zeroScale; posScale; negScale]';
+end
+
+end

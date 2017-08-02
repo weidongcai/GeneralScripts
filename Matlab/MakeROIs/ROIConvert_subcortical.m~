@@ -1,0 +1,20 @@
+%-convert marsbar ROIs to MNI nii
+addpath(genpath('/home/fmri/fmrihome/SPM/spm8/toolbox/marsbar'));
+
+addpath(pwd);
+roiListFname = '/mnt/mandarin2/Public_Data/HCP/ROIs/Subcortical_from_Parcellation_HCP_rsfMRI_LR_77subjects/roiList_mat_full_path.txt';
+
+%roi_dir = '/mnt/mandarin2/Public_Data/HCP/ROIs/Subcortical_from_Parcellation_HCP_rsfMRI_LR_77subjects/';
+
+%cd(roi_dir);
+%rois = dir('*-10mm_*_roi.mat');
+
+num_roi = length(rois);
+
+roi_list = cell(num_roi, 1);
+
+for i = 1:num_roi
+  roi_list{i} = fullfile(roi_dir, rois(i).name);
+end
+
+mars_rois2img(roi_list, '/mnt/mapricot/musk2/home/tianwenc/MakeROIs/ROI_160_10mm.nii')

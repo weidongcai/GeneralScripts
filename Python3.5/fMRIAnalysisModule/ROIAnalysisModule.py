@@ -12,7 +12,7 @@ import scipy.io as spio
 import nibabel as nib
 import matplotlib.pyplot as plt 
 
-sys.path.append('/home/wdcai/Library/Python3.5/CommonModule')
+sys.path.append('../CommonModule')
 
 def get1stEigenTS(X):
   """

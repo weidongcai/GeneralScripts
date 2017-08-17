@@ -12,7 +12,7 @@ import csv
 import nilearn
 import nilearn.image
 
-sys.path.append('../../Python/ModulesFromColleagues')
+sys.path.append('/home/wdcai/Library/Python/ModulesFromColleagues')
 from filtutils import get_filt_coeffs
 
 def BPFilter(X,TR,fl,fh):

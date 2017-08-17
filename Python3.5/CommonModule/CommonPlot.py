@@ -6,11 +6,7 @@ import seaborn as sns
 from math import pi
 import matplotlib.pyplot as plt
 
-def RadarPlot(vec_values, vec_names, y_tick_values, y_tick_names, area_color):
-
-  # Set data
-  #cat = ['Speed', 'Reliability', 'Comfort', 'Safety', 'Effieciency']
-  #values = [90, 60, 65, 70, 40]
+def RadarPlot(vec_values, vec_names, y_tick_values, y_tick_names, area_color, ofname_fig):
 
   N = len(vec_names)
 
@@ -20,9 +16,9 @@ def RadarPlot(vec_values, vec_names, y_tick_values, y_tick_names, area_color):
   # value of each list at the end of each list with data
   vec_values += vec_values[:1]
   x_as += x_as[:1]
-
-  print(x_as)
-  print(vec_values)
+  
+  # Set figure size
+  plt.figure(figsize=(5,4))
 
   # Set color of axes
   plt.rc('axes', linewidth=1, edgecolor="#888888")
@@ -51,7 +47,7 @@ def RadarPlot(vec_values, vec_names, y_tick_values, y_tick_names, area_color):
   ax.plot(x_as, vec_values, linewidth=2, linestyle='solid', zorder=3)
 
   # Fill area
-  ax.fill(x_as, vec_values, area_color, alpha=0.5)
+  ax.fill(x_as, vec_values, area_color, alpha=0.3)
 
   # Set axes limits
   ylim_min = min(y_tick_values)
@@ -63,15 +59,16 @@ def RadarPlot(vec_values, vec_names, y_tick_values, y_tick_names, area_color):
     angle_rad = i / float(N) * 2 * pi
 
     if angle_rad == 0:
-      ha, distance_ax = "center", 10
+      ha, distance_ax = "center", (1 + (y_tick_values[-1]-y_tick_values[-2])/4)
     elif 0 < angle_rad < pi:
       ha, distance_ax = "left", 1
     elif angle_rad == pi:
       ha, distance_ax = "center", 1
     else:
       ha, distance_ax = "right", 1
-
-    ax.text(angle_rad, 100 + distance_ax, vec_names[i], size=10, horizontalalignment=ha, verticalalignment="center")
+    
+    ax.text(angle_rad, y_tick_values[-2] + distance_ax, vec_names[i], size=14, horizontalalignment=ha, verticalalignment="center")
 
   # Show polar plot
+  plt.savefig(ofname_fig, dpi=1000)
   plt.show()

@@ -260,6 +260,24 @@ def ExtractROIValueFromMRI(dataFname, roiFname):
   data_img_data = data_img.get_data()
   data_img_roi_mean = np.nanmean(data_img_data[roi_img_idx])
   
+  return data_img_roi_mean
+
+def ExtractROIValueFromNonzeroMRI(dataFname, roiFname):
+  """
+  This module extracts ROI mean from 3D MRI data
+  ROIs are nii or img files
+  ignore all the nonzero voxel
+  """
+ 
+  roi_img = nib.load(roiFname)
+  roi_img_data = roi_img.get_data()
+  roi_img_idx = np.nonzero(roi_img_data)
+
+  data_img = nib.load(dataFname)
+  data_img_data = data_img.get_data()
+  data_img_data[data_img_data == 0] = np.nan
+  data_img_roi_mean = np.nanmean(data_img_data[roi_img_idx])
+  
   return data_img_roi_mean 
 
 def ExtractNumberLabeledROIValueFromMRI(dataFname, roiFname):

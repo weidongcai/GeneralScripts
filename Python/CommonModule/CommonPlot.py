@@ -1,8 +1,7 @@
-#/home/wdcai/anaconda3/bin/
+#/home/wdcai/anaconda2/bin/
 
 import os
 import sys
-import seaborn as sns
 from math import pi
 import matplotlib.pyplot as plt
 
